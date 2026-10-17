@@ -37,8 +37,7 @@ Run the examples over several matrices and turn the collected JSON records
 into one table and a plot:
 
 ```sh
-bsmp benchmark run --matrix a.txt --rhs a.rhs --matrix b.txt --rhs b.rhs \
-    --method bicgstab --method gmres --table results.csv --plot results.png
+bsmp benchmark run --matrix F:\science\bsmp\temp\bfw782a.mtx --rhs F:\science\bsmp\temp\bfw782a.rhs --method mult --method bicgstab --no-build --work-dir F:\science\bsmp\benchmark_runs --table F:\science\bsmp\benchmark_runs\table.csv --plot F:\science\bsmp\benchmark_runs\plot.png
 ```
 
 Reprocess records collected earlier:
