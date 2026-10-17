@@ -7,6 +7,8 @@
 #include <sstream>
 #include <unordered_map>
 
+namespace bsmp {
+
 struct PairHash {
     size_t operator()(const std::pair<int, int>& p) const noexcept {
         return (static_cast<size_t>(p.first) << 32) ^ static_cast<size_t>(p.second);
@@ -245,3 +247,5 @@ BlockSparseMatrix* load_matrix_market_to_matrix(const std::string& path, int blo
     m->initialize(br, bc, bd);
     return m;
 }
+
+}  // namespace bsmp

@@ -6,6 +6,7 @@
 #include "amg_preconditioner.h"
 #include "block_sparse_matrix.h"
 
+namespace bsmp {
 /// @brief BiCGStab (Bi-Conjugate Gradient Stabilized) solver for `Ax = b`.
 /// @note Suitable for non-symmetric, non-positive-definite matrices
 /// @param A `BlockSparseMatrix` (uses multiply on device)
@@ -43,3 +44,4 @@ bool bicgstab(BlockSparseMatrix& A,
               const PreconditionerOptions& preconditioner_options);
 
 #endif  // BSMP_BICGSTAB_H
+} // namespace bsmp

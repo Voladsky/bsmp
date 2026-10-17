@@ -5,6 +5,8 @@
 
 #include "bsmp/elastic_nullspace.h"
 
+using namespace bsmp;
+
 namespace {
 
 float dot_product(const std::vector<float>& a, const std::vector<float>& b) {

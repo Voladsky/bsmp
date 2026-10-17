@@ -7,6 +7,8 @@
 #include "bsmp/generalized_eigen.h"
 #include "bsmp/triplet_loader.h"
 
+using namespace bsmp;
+
 int main(int argc, char** argv) {
     std::cout << std::fixed << std::setprecision(6);
 

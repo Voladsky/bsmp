@@ -18,24 +18,26 @@
 
 #include "bsmp_config.h"
 
-#define CHECK_CUDA_BOOL(call)                                                            \
-    do {                                                                                 \
-        cudaError_t err__ = (call);                                                      \
-        if (err__ != cudaSuccess) {                                                      \
-            std::fprintf(stderr, "CUDA error at %s:%d: %s\n", __FILE__, __LINE__,      \
-                         cudaGetErrorString(err__));                                     \
-            return false;                                                                \
-        }                                                                                \
+namespace bsmp {
+
+#define CHECK_CUDA_BOOL(call)                                                     \
+    do {                                                                          \
+        cudaError_t err__ = (call);                                               \
+        if (err__ != cudaSuccess) {                                               \
+            std::fprintf(stderr, "CUDA error at %s:%d: %s\n", __FILE__, __LINE__, \
+                         cudaGetErrorString(err__));                              \
+            return false;                                                         \
+        }                                                                         \
     } while (0)
 
-#define CUBLAS_CHECK_BOOL(call)                                                          \
-    do {                                                                                 \
-        cublasStatus_t status__ = (call);                                                \
-        if (status__ != CUBLAS_STATUS_SUCCESS) {                                         \
-            std::fprintf(stderr, "cuBLAS error at %s:%d: %d\n", __FILE__, __LINE__,   \
-                         static_cast<int>(status__));                                    \
-            return false;                                                                \
-        }                                                                                \
+#define CUBLAS_CHECK_BOOL(call)                                                     \
+    do {                                                                            \
+        cublasStatus_t status__ = (call);                                           \
+        if (status__ != CUBLAS_STATUS_SUCCESS) {                                    \
+            std::fprintf(stderr, "cuBLAS error at %s:%d: %d\n", __FILE__, __LINE__, \
+                         static_cast<int>(status__));                               \
+            return false;                                                           \
+        }                                                                           \
     } while (0)
 
 namespace {
@@ -335,7 +337,8 @@ AggregateData build_weighted_aggregates(const HostMatrixData& matrix) {
     aggregate_data.coarse_block_rows = aggregate_data.ids.empty()
                                            ? 0
                                            : (*std::max_element(aggregate_data.ids.begin(),
-                                                                aggregate_data.ids.end()) + 1);
+                                                                aggregate_data.ids.end()) +
+                                              1);
     aggregate_data.weights.assign(matrix.num_block_rows, 1.0f);
 
     if (aggregate_data.coarse_block_rows <= 0) {
@@ -1005,3 +1008,5 @@ std::unique_ptr<LinearPreconditioner> createPreconditioner(BlockSparseMatrix& A,
     }
     return std::move(fallback);
 }
+
+}  // namespace bsmp

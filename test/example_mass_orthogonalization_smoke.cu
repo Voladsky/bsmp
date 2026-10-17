@@ -6,6 +6,8 @@
 #include "bsmp/mass_orthogonalization.h"
 #include "bsmp/piezo_block_system.h"
 
+using namespace bsmp;
+
 namespace {
 
 bool nearly_equal(float lhs, float rhs, float tolerance = 1e-4f) {

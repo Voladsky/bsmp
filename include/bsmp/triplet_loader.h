@@ -6,6 +6,8 @@
 
 #include "block_sparse_matrix.h"
 
+namespace bsmp {
+
 /// @brief Read a file with triplets (i j v) where i and j are zero-based integer
 /// row/col indices and v is a floating point value. Lines starting with '#' or empty lines are ignored.
 /// @note This function will coalesce values that fall into the same block (by summing
@@ -45,3 +47,4 @@ BlockSparseMatrix* load_matrix_market_to_matrix(const std::string& path,
                                                 int block_size);
 
 #endif  // TRIPLET_LOADER_H
+}  // namespace bsmp

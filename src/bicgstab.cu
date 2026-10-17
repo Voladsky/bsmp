@@ -7,6 +7,8 @@
 
 #include "bicgstab.h"
 
+namespace bsmp {
+
 #define CUBLAS_CHECK(call)                                                              \
     do {                                                                                \
         cublasStatus_t status = call;                                                   \
@@ -197,3 +199,5 @@ bool bicgstab(BlockSparseMatrix& A,
     cleanup();
     return converged;
 }
+
+}  // namespace bsmp

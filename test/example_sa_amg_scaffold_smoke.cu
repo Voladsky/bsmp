@@ -8,6 +8,8 @@
 #include "bsmp/piezo_block_system.h"
 #include "bsmp/sa_amg_preconditioner.h"
 
+using namespace bsmp;
+
 int main() {
     std::cout << std::fixed << std::setprecision(6);
     std::cout << "=== SA-AMG scaffold smoke test ===" << std::endl;

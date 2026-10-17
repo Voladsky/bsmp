@@ -11,6 +11,8 @@
 #include "bsmp/block_sparse_matrix.h"
 #include "bsmp/triplet_loader.h"
 
+using namespace bsmp;
+
 struct Options {
     std::string format = "triplets";
     std::string matrix_path;

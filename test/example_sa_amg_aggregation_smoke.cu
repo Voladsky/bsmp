@@ -7,6 +7,8 @@
 #include "bsmp/piezo_block_system.h"
 #include "bsmp/sa_amg_hierarchy.h"
 
+using namespace bsmp;
+
 namespace {
 
 std::vector<float> multiply_dense(const std::vector<float>& matrix,

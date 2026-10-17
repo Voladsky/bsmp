@@ -4,7 +4,6 @@
 #include "amg_preconditioner.h"
 #include "bicgstab.h"
 #include "block_sparse_matrix.h"
-#include "bsmp.h"
 #include "bsmp_config.h"
 #include "chebyshev_smoother.h"
 #include "deflated_pcg_eigensolver.h"

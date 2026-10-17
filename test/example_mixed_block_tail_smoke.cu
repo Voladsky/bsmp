@@ -7,6 +7,8 @@
 
 #include "bsmp/piezo_block_system.h"
 
+using namespace bsmp;
+
 namespace {
 
 float max_abs_difference(const std::vector<float>& a, const std::vector<float>& b) {

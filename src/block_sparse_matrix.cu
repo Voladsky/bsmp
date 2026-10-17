@@ -7,6 +7,8 @@
 
 int THREADS_COUNT = 128;
 
+namespace bsmp {
+
 /// @brief Helper macro for CUDA errors
 #define CHECK_CUDA(call)                                                 \
     do {                                                                 \
@@ -258,3 +260,5 @@ void BlockSparseMatrix::multiplyTranspose(const float* d_x, float* d_y, cudaStre
 
     CHECK_CUDA(cudaGetLastError());
 }
+
+}  // namespace bsmp

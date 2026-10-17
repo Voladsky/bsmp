@@ -6,6 +6,8 @@
 #include "amg_preconditioner.h"
 #include "block_sparse_matrix.h"
 
+namespace bsmp {
+
 /// @brief Restarted GMRES solver for `Ax = b` with block-Jacobi left preconditioning.
 /// @param A `BlockSparseMatrix` in BSMP block format (uses device block matvec)
 /// @param d_b device pointer to RHS vector of length `A.num_rows`
@@ -46,3 +48,5 @@ bool gmres(BlockSparseMatrix& A,
            const PreconditionerOptions& preconditioner_options);
 
 #endif  // BSMP_GMRES_H
+
+} // namespace bsmp

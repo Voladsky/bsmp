@@ -25,6 +25,8 @@
 #include "bsmp/sa_amg_preconditioner.h"
 #include "bsmp/schur_operator.h"
 
+using namespace bsmp;
+
 namespace {
 
 struct ExampleOptions {

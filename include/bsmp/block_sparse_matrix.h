@@ -9,6 +9,8 @@
 
 #include "bsmp_config.h"
 
+namespace bsmp {
+
 struct BlockSparseMatrixConfig {
     int num_rows;
     int num_cols;
@@ -67,4 +69,6 @@ class BlockSparseMatrix {
     void freeMemory();
 };
 
+
+}  // namespace bsmp
 #endif  // BLOCK_SPARSE_MATRIX_H

@@ -6,6 +6,8 @@
 
 #include "block_sparse_matrix.h"
 
+namespace bsmp {
+
 enum class PreconditionerType {
     None,
     ScalarJacobi,
@@ -42,4 +44,5 @@ class LinearPreconditioner {
 std::unique_ptr<LinearPreconditioner> createPreconditioner(BlockSparseMatrix& A,
                                                            const PreconditionerOptions& options);
 
+}  // namespace bsmp
 #endif  // BSMP_AMG_PRECONDITIONER_H

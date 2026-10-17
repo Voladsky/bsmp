@@ -10,6 +10,8 @@
 
 #include "gmres.h"
 
+namespace bsmp {
+
 #define CUBLAS_CHECK(call)                                                              \
     do {                                                                                \
         cublasStatus_t status = call;                                                   \
@@ -243,3 +245,4 @@ bool gmres(BlockSparseMatrix& A,
     cleanup();
     return converged;
 }
+}  // namespace bsmp

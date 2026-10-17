@@ -9,6 +9,8 @@
 #include "bsmp/piezo_scaling.h"
 #include "bsmp/schur_operator.h"
 
+using namespace bsmp;
+
 namespace {
 
 float max_abs_difference(const std::vector<float>& a, const std::vector<float>& b) {

@@ -5,6 +5,8 @@
 
 #include "bsmp/elastic_regularization.h"
 
+using namespace bsmp;
+
 int main() {
     std::cout << std::fixed << std::setprecision(6);
     std::cout << "=== Regularized elastic operator smoke test ===" << std::endl;

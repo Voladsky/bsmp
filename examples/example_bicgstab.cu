@@ -11,6 +11,8 @@
 #include "bsmp/block_sparse_matrix.h"
 #include "bsmp/triplet_loader.h"
 
+using namespace bsmp;
+
 static PreconditionerOptions parse_preconditioner_option(const char* value) {
     PreconditionerOptions options;
     if (value != nullptr && *value != '\0') {
