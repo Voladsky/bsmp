@@ -30,7 +30,7 @@ void Record::rhs(uint32_t size, bool from_task) {
     data["problem"]["rhs"]["from_task"] = from_task;
 }
 
-void Record::run(bsmp::experiment::Run r) {
+void Record::run(const bsmp::experiment::Run& r) {
     data["runs"].push_back(r.get());
 }
 
@@ -61,6 +61,10 @@ void Run::tolerance(float value) {
 
 void Run::time(float value) {
     data["metrics"]["time"] = value;
+}
+
+void Run::avg_time(float value) {
+    data["metrics"]["avg_time"] = value;
 }
 
 void Run::residual(float value) {

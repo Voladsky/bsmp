@@ -1,15 +1,18 @@
 set (CMAKE_FOLDER "examples")
 
-# Example executable
-add_executable(example example.cu)
+# The .cpp examples contain no kernels of their own, but bsmp is built with
+# relocatable device code (CUDA_SEPARABLE_COMPILATION ON). Each executable
+# must therefore be a CUDA link target so that CMake runs nvcc's device-link
+# step, which resolves the __cudaRegisterLinkedBinary_* symbols in bsmp.lib.
+
+add_executable(example "example.cpp")
 
 target_link_libraries(example PRIVATE bsmp)
 target_compile_definitions(example PRIVATE BSMP_BLOCK_SIZE=${BSMP_BLOCK_SIZE})
 
 bsmp_setup_target(example)
 
-# Eigen example executable
-add_executable(example_eigen example_eigen.cu)
+add_executable(example_eigen example_eigen.cpp)
 
 target_link_libraries(example_eigen PRIVATE bsmp)
 target_compile_definitions(example_eigen PRIVATE BSMP_BLOCK_SIZE=${BSMP_BLOCK_SIZE})
@@ -17,7 +20,7 @@ target_compile_definitions(example_eigen PRIVATE BSMP_BLOCK_SIZE=${BSMP_BLOCK_SI
 bsmp_setup_target(example_eigen)
 
 # Article-style SA-AMG + deflated PCG eigen example executable
-add_executable(example_sa_amg_pcg_eigen example_sa_amg_pcg_eigen.cu)
+add_executable(example_sa_amg_pcg_eigen example_sa_amg_pcg_eigen.cpp)
 
 target_link_libraries(example_sa_amg_pcg_eigen PRIVATE bsmp)
 if(CUDAToolkit_FOUND)
@@ -28,7 +31,7 @@ target_compile_definitions(example_sa_amg_pcg_eigen PRIVATE BSMP_BLOCK_SIZE=${BS
 bsmp_setup_target(example_sa_amg_pcg_eigen)
 
 # BiCGStab example executable
-add_executable(example_bicgstab example_bicgstab.cu)
+add_executable(example_bicgstab example_bicgstab.cpp)
 
 target_link_libraries(example_bicgstab PRIVATE bsmp)
 target_compile_definitions(example_bicgstab PRIVATE BSMP_BLOCK_SIZE=${BSMP_BLOCK_SIZE})
@@ -36,7 +39,7 @@ target_compile_definitions(example_bicgstab PRIVATE BSMP_BLOCK_SIZE=${BSMP_BLOCK
 bsmp_setup_target(example_bicgstab)
 
 # GMRES example executable
-add_executable(example_gmres example_gmres.cu)
+add_executable(example_gmres example_gmres.cpp)
 
 target_link_libraries(example_gmres PRIVATE bsmp)
 target_compile_definitions(example_gmres PRIVATE BSMP_BLOCK_SIZE=${BSMP_BLOCK_SIZE})

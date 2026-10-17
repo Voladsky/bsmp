@@ -17,6 +17,7 @@ class Run {
     void max_iters(uint32_t value);
     void tolerance(float value);
     void time(float value);
+    void avg_time(float value);
     void residual(float value);
 
     json get() const;
@@ -38,7 +39,7 @@ class Record {
                 uint32_t nnz);
     void rhs(uint32_t size,
              bool from_task);
-    void run(bsmp::experiment::Run);
+    void run(const bsmp::experiment::Run&);
 
     void write(fs::path path) const;
     json get() const;

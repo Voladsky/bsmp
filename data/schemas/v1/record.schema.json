@@ -133,15 +133,14 @@
                     },
                     "metrics": {
                         "type": "object",
-                        "required": [
-                            "time",
-                            "residual"
-                        ],
                         "properties": {
                             "time": {
                                 "type": "number"
                             },
                             "residual": {
+                                "type": "number"
+                            },
+                            "avg_time": {
                                 "type": "number"
                             }
                         }
