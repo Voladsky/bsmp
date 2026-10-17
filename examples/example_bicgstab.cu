@@ -7,9 +7,9 @@
 #include <sstream>
 #include <vector>
 
-#include "bicgstab.h"
-#include "block_sparse_matrix.h"
-#include "triplet_loader.h"
+#include "bsmp/bicgstab.h"
+#include "bsmp/block_sparse_matrix.h"
+#include "bsmp/triplet_loader.h"
 
 static PreconditionerOptions parse_preconditioner_option(const char* value) {
     PreconditionerOptions options;

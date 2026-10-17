@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "piezo_block_system.h"
+#include "bsmp/piezo_block_system.h"
 
 namespace {
 

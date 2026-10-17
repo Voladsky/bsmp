@@ -3,9 +3,9 @@
 #include <iomanip>
 #include <iostream>
 
-#include "block_sparse_matrix.h"
-#include "generalized_eigen.h"
-#include "triplet_loader.h"
+#include "bsmp/block_sparse_matrix.h"
+#include "bsmp/generalized_eigen.h"
+#include "bsmp/triplet_loader.h"
 
 int main(int argc, char** argv) {
     std::cout << std::fixed << std::setprecision(6);

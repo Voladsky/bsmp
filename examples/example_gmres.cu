@@ -9,9 +9,9 @@
 #include <sstream>
 #include <vector>
 
-#include "block_sparse_matrix.h"
-#include "gmres.h"
-#include "triplet_loader.h"
+#include "bsmp/block_sparse_matrix.h"
+#include "bsmp/gmres.h"
+#include "bsmp/triplet_loader.h"
 
 static PreconditionerOptions parse_preconditioner_option(const char* value) {
     PreconditionerOptions options;

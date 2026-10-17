@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "elastic_regularization.h"
+#include "bsmp/elastic_regularization.h"
 
 int main() {
     std::cout << std::fixed << std::setprecision(6);

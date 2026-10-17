@@ -16,14 +16,14 @@
 
 #include <cusolverDn.h>
 
-#include "deflated_pcg_eigensolver.h"
-#include "elastic_nullspace.h"
-#include "mass_orthogonalization.h"
-#include "node_layout.h"
-#include "piezo_block_system.h"
-#include "piezo_scaling.h"
-#include "sa_amg_preconditioner.h"
-#include "schur_operator.h"
+#include "bsmp/deflated_pcg_eigensolver.h"
+#include "bsmp/elastic_nullspace.h"
+#include "bsmp/mass_orthogonalization.h"
+#include "bsmp/node_layout.h"
+#include "bsmp/piezo_block_system.h"
+#include "bsmp/piezo_scaling.h"
+#include "bsmp/sa_amg_preconditioner.h"
+#include "bsmp/schur_operator.h"
 
 namespace {
 

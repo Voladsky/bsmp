@@ -5,10 +5,10 @@
 #include <iostream>
 #include <vector>
 
-#include "chebyshev_smoother.h"
-#include "elastic_nullspace.h"
-#include "piezo_block_system.h"
-#include "sa_amg_preconditioner.h"
+#include "bsmp/chebyshev_smoother.h"
+#include "bsmp/elastic_nullspace.h"
+#include "bsmp/piezo_block_system.h"
+#include "bsmp/sa_amg_preconditioner.h"
 
 namespace {
 

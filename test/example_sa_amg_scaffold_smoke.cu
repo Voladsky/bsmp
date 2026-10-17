@@ -5,8 +5,8 @@
 #include <iostream>
 #include <vector>
 
-#include "piezo_block_system.h"
-#include "sa_amg_preconditioner.h"
+#include "bsmp/piezo_block_system.h"
+#include "bsmp/sa_amg_preconditioner.h"
 
 int main() {
     std::cout << std::fixed << std::setprecision(6);

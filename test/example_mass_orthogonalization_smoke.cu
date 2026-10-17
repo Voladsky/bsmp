@@ -3,8 +3,8 @@
 #include <stdexcept>
 #include <vector>
 
-#include "mass_orthogonalization.h"
-#include "piezo_block_system.h"
+#include "bsmp/mass_orthogonalization.h"
+#include "bsmp/piezo_block_system.h"
 
 namespace {
 

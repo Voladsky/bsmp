@@ -23,9 +23,13 @@ add_library(bsmp STATIC
   sa_amg_preconditioner.cu
 )
 
-target_include_directories(bsmp PUBLIC
-    ${CMAKE_SOURCE_DIR}/include # for public headers
-    ${CMAKE_CURRENT_SOURCE_DIR} # if private headers will be needed
+target_include_directories(bsmp
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    PRIVATE
+        ${CMAKE_SOURCE_DIR}/include/bsmp
+        ${CMAKE_CURRENT_SOURCE_DIR} # if private headers will be needed
 )
 
 target_compile_definitions(bsmp PUBLIC BSMP_BLOCK_SIZE=${BSMP_BLOCK_SIZE})

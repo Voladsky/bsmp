@@ -5,13 +5,13 @@
 #include <stdexcept>
 #include <vector>
 
-#include "elastic_nullspace.h"
-#include "deflated_pcg_eigensolver.h"
-#include "mass_orthogonalization.h"
-#include "piezo_scaling.h"
-#include "piezo_block_system.h"
-#include "sa_amg_preconditioner.h"
-#include "schur_operator.h"
+#include "bsmp/elastic_nullspace.h"
+#include "bsmp/deflated_pcg_eigensolver.h"
+#include "bsmp/mass_orthogonalization.h"
+#include "bsmp/piezo_scaling.h"
+#include "bsmp/piezo_block_system.h"
+#include "bsmp/sa_amg_preconditioner.h"
+#include "bsmp/schur_operator.h"
 
 namespace {
 

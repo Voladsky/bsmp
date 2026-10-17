@@ -5,9 +5,9 @@
 #include <iostream>
 #include <vector>
 
-#include "piezo_block_system.h"
-#include "piezo_scaling.h"
-#include "schur_operator.h"
+#include "bsmp/piezo_block_system.h"
+#include "bsmp/piezo_scaling.h"
+#include "bsmp/schur_operator.h"
 
 namespace {
 

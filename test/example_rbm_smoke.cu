@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "elastic_nullspace.h"
+#include "bsmp/elastic_nullspace.h"
 
 namespace {
 

@@ -3,9 +3,9 @@
 #include <iostream>
 #include <vector>
 
-#include "elastic_nullspace.h"
-#include "piezo_block_system.h"
-#include "sa_amg_hierarchy.h"
+#include "bsmp/elastic_nullspace.h"
+#include "bsmp/piezo_block_system.h"
+#include "bsmp/sa_amg_hierarchy.h"
 
 namespace {
 
