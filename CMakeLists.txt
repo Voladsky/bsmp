@@ -1,7 +1,9 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.18)
 
-project(bsmp LANGUAGES CXX CUDA)
+project(bsmp LANGUAGES CXX CUDA VERSION 0.1.0)
 
+option(BSMP_ENABLE_COMPUTE_SANITIZER "Enables analysis with compute-sanitizer" ON)
+option(BSMP_ENABLE_CLANG_TIDY "Enables static analysis with clang-tidy" ON)
 option(BSMP_DOWNLOAD_THIRDPARTY "Download thirdparty libraries from the Internet" ON)
 
 include(CTest)
@@ -15,15 +17,15 @@ include("cmake/StaticAnalysis.cmake")
 include("cmake/Sanitizer.cmake")
 include("cmake/ThirdParty.cmake")
 
-add_subdirectory("src")
-add_subdirectory("examples")
+add_subdirectory(src)
+add_subdirectory(examples)
 
 add_subdirectory("tests/smoke")
 add_subdirectory("tests/unit")
 
 # Installation (optional)
 install(TARGETS bsmp example example_bicgstab example_gmres example_eigen example_sa_amg_pcg_eigen example_schur_smoke example_mixed_block_tail_smoke example_rbm_smoke example_regularized_elastic_smoke example_sa_amg_scaffold_smoke example_sa_amg_aggregation_smoke example_sa_amg_galerkin_smoke example_sa_amg_smoothing_smoke example_sa_amg_vcycle_smoke example_sa_amg_chebyshev_smoke example_mass_orthogonalization_smoke example_deflated_pcg_eigensolver_smoke
-  RUNTIME DESTINATION bin
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin COMPONENT runtime
+  ARCHIVE DESTINATION lib COMPONENT libs
+  LIBRARY DESTINATION lib COMPONENT libs
 )
