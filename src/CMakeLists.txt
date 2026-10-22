@@ -1,35 +1,12 @@
-# Compile-time block size configuration
-set(BSMP_BLOCK_SIZE 3)
-message(STATUS "BSMP_BLOCK_SIZE = ${BSMP_BLOCK_SIZE}")
+file(GLOB_RECURSE bsmp_SRC "*.cpp" "*.hpp")
 
-# Library target
 add_library(bsmp STATIC
-  block_sparse_matrix.cu
-  triplet_loader.cpp
-  amg_preconditioner.cu
-  bicgstab.cu
-  gmres.cu
-  generalized_eigen.cu
-  piezo_block_system.cu
-  piezo_scaling.cu
-  schur_operator.cu
-  node_layout.cpp
-  elastic_nullspace.cpp
-  elastic_regularization.cu
-  mass_orthogonalization.cu
-  deflated_pcg_eigensolver.cu
-  chebyshev_smoother.cu
-  sa_amg_hierarchy.cpp
-  sa_amg_preconditioner.cu
+    ${bsmp_SRC}
 )
 
-target_include_directories(bsmp
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:${CMAKE_SOURCE_DIR}/include>
-    PRIVATE
-        ${CMAKE_SOURCE_DIR}/include/bsmp
-        ${CMAKE_CURRENT_SOURCE_DIR} # if private headers will be needed
+target_include_directories(bsmp PUBLIC
+    ${CMAKE_SOURCE_DIR}/include # for public headers
+    ${CMAKE_CURRENT_SOURCE_DIR} # if private headers will be needed
 )
 
 target_compile_definitions(bsmp PUBLIC BSMP_BLOCK_SIZE=${BSMP_BLOCK_SIZE})
