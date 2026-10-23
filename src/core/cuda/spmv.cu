@@ -101,16 +101,16 @@ __global__ void block_sparse_matvec_transpose_kernel(
     atomicAdd(&y[global_col], sum);
 }
 
-static void spmv_coo(const SpmvCOOArgs& args) noexcept {
+void spmv_coo(const SpmvCOOArgs& args) noexcept {
     int threads = 128;
-    threads = (threads / config_.block_size) * config_.block_size;
-    if (threads < config_.block_size) threads = config_.block_size;
-    int matrix_blocks_per_cuda_block = threads / config_.block_size;
+    threads = (threads / args.block_size) * args.block_size;
+    if (threads < args.block_size) threads = args.block_size;
+    int matrix_blocks_per_cuda_block = threads / args.block_size;
     if (matrix_blocks_per_cuda_block < 1) matrix_blocks_per_cuda_block = 1;
     int cuda_blocks =
-        (config_.num_nonzero_blocks + matrix_blocks_per_cuda_block - 1) /
+        (args.num_nonzero_blocks + matrix_blocks_per_cuda_block - 1) /
         matrix_blocks_per_cuda_block;
-    block_sparse_matvec_kernel<<<cuda_blocks, threads, 0, stream>>>(
+    block_sparse_matvec_kernel<<<cuda_blocks, threads, 0>>>(
         args.block_rows,
         args.block_cols,
         args.block_data,
@@ -119,8 +119,8 @@ static void spmv_coo(const SpmvCOOArgs& args) noexcept {
         args.num_nonzero_blocks,
         args.block_size,
         args.num_rows,
-        args.num_col;),
-        CHECK_CUDA(cudaGetLastError());
+        args.num_cols);
+    CHECK_CUDA(cudaGetLastError());
 }
 
 }  // namespace cuda

@@ -13,7 +13,7 @@ template <typename T>
 class DeviceBuffer {
    public:
     DeviceBuffer(size_t n, std::shared_ptr<DeviceAllocator> alloc_ptr) : n_(n), alloc_(alloc_ptr) {
-        d_ptr_ = reinterpret_cast<T*>(alloc_->allocate(n_));
+        d_ptr_ = reinterpret_cast<T*>(alloc_->allocate(n_ * sizeof(T)));
     }
     DeviceBuffer(DeviceBuffer&& other) noexcept : d_ptr_(other.d_ptr_), n_(other.n_), alloc_(other.alloc_) {
         other.d_ptr_ = nullptr;
@@ -35,7 +35,11 @@ class DeviceBuffer {
         return *this;
     }
     DeviceBuffer& operator=(const DeviceBuffer&) = delete;
-    ~DeviceBuffer() { alloc_->deallocate(d_ptr_); }
+    ~DeviceBuffer() {
+        if (d_ptr_ != nullptr) {
+            alloc_->deallocate(d_ptr_);
+        }
+    }
     [[nodiscard]] T* data() noexcept { return d_ptr_; };
     [[nodiscard]] const T* data() const noexcept { return d_ptr_; }
     [[nodiscard]] size_t size() const noexcept { return n_; }

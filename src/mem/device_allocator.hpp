@@ -2,6 +2,8 @@
 #define BSMP_DEVICE_ALLOCATOR_HPP
 
 #include <cstddef>
+#include <memory>
+#include <cstdint>
 
 namespace bsmp {
 
@@ -11,17 +13,17 @@ class DeviceAllocator {
    public:
     [[nodiscard]] virtual void* allocate(size_t bytes) = 0;
     virtual void deallocate(void* ptr) = 0;
-    virtual ~DeviceAllocator() = 0;
+    virtual ~DeviceAllocator() = default;
 };
 
-class SimpleAllocator : DeviceAllocator {
+class SimpleAllocator : public DeviceAllocator {
    public:
     [[nodiscard]] void* allocate(size_t bytes) override;
     void deallocate(void* ptr) override;
     ~SimpleAllocator() override;
 };
 
-class SpanAllocator : DeviceAllocator {
+class SpanAllocator : public DeviceAllocator {
    public:
     SpanAllocator(size_t capacity);
     [[nodiscard]] void* allocate(size_t bytes) override;
@@ -29,10 +31,18 @@ class SpanAllocator : DeviceAllocator {
     ~SpanAllocator() override;
 
    private:
-    std::byte* d_ptr_;
+    uint8_t* d_ptr_;
     size_t capacity_;
     size_t offset_;
 };
+
+// One process-wide default; built on first use (no static-init-order fiasco)
+// and swappable by tests via the returned reference.
+inline std::shared_ptr<DeviceAllocator>& default_allocator() {
+    static std::shared_ptr<DeviceAllocator> alloc =
+        std::make_shared<SimpleAllocator>();
+    return alloc;
+}
 
 }  // namespace mem
 

@@ -8,6 +8,7 @@ namespace bsmp {
 namespace prof {
 
 struct CPUProfilingContract {
+    constexpr static bool enabled = true;
     struct Scope {
         std::chrono::steady_clock::time_point start;
         void stop() noexcept {
@@ -27,7 +28,8 @@ struct CPUProfilingContract {
     }
 };
 
-static_assert(is_profiling_contract<CPUProfilingContract>(), "CPUProfilingContract does not satisfy the profiling contract");
+static_assert(is_profiling_contract<CPUProfilingContract>(),
+              "CPUProfilingContract does not satisfy the profiling contract");
 
 }  // namespace prof
 }  // namespace bsmp

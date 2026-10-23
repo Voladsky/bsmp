@@ -16,6 +16,11 @@ include("cmake/Sanitizer.cmake")
 add_subdirectory(src)
 #add_subdirectory(examples)
 
+# New-framework quick start: block-COO SpMV on a random matrix.
+add_executable(framework_spmv_demo examples/framework_spmv_demo.cu)
+target_link_libraries(framework_spmv_demo PRIVATE bsmp)
+bsmp_setup_target(framework_spmv_demo)
+
 enable_testing()
 #add_subdirectory(test)
 

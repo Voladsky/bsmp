@@ -9,7 +9,7 @@ struct NoProfilingContract {
     struct Scope {
         void stop() noexcept {}
     };
-    Scope makeScope() const {}
+    Scope makeScope() const { return {}; }
 };
 
 static_assert(is_profiling_contract<NoProfilingContract>(), "NoProfilingContract does not satisfy the profiling contract");

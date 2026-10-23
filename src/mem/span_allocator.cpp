@@ -23,7 +23,7 @@ void SpanAllocator::deallocate(void* ptr) {
 }
 
 SpanAllocator::~SpanAllocator() {
-    cudaFree(&d_ptr_);
+    cudaFree(d_ptr_);
 }
 
 }  // namespace mem

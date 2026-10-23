@@ -1,4 +1,4 @@
-file(GLOB_RECURSE bsmp_SRC "*.cpp" "*.hpp")
+file(GLOB_RECURSE bsmp_SRC "*.cpp" "*.hpp" "*.cu" "*.cuh")
 
 add_library(bsmp STATIC
     ${bsmp_SRC}

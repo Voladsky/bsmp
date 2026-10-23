@@ -12,7 +12,7 @@ void* SimpleAllocator::allocate(size_t bytes) {
 }
 
 void SimpleAllocator::deallocate(void* ptr) {
-    cudaFree(&ptr);
+    cudaFree(ptr);
 }
 
 SimpleAllocator::~SimpleAllocator() {
