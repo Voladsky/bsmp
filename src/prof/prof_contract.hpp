@@ -1,3 +1,6 @@
+#ifndef BSMP_PROF_CONTRACT
+#define BSMP_PROF_CONTRACT
+
 #include <type_traits>
 #include <utility>
 
@@ -21,3 +24,5 @@ struct is_profiling_contract<
                     noexcept(std::declval<typename T::Scope&>().stop())> {};
 }  // namespace prof
 }  // namespace bsmp
+
+#endif BSMP_PROF_CONTRACT

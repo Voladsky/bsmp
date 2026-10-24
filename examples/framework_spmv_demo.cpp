@@ -20,11 +20,13 @@
 #include "core/matrix_formats.hpp"
 #include "core/sparse_matrix.hpp"
 #include "io/parsers_utilities.hpp"
+#include "prof/cpu_time_scope.hpp"
 
 int run(int argc, char** argv) {
     using bsmp::core::DenseVector;
     using bsmp::core::SparseMatrix;
     using bsmp::core::formats::COOFormat;
+    using bsmp::prof::CPUProfilingContract;
     using namespace bsmp::io::parser_utilities;
 
     int mults = 10;
@@ -98,7 +100,7 @@ int run(int argc, char** argv) {
 
     // 4. Build the device matrix (mem::default_allocator()).
     COOFormat::Buffers buffers = to_coo(coo);
-    SparseMatrix<COOFormat> A(std::move(buffers));
+    SparseMatrix<COOFormat, CPUProfilingContract> A(std::move(buffers));
 
     // x_host is dead after the reference computation: move it onto the device.
     DenseVector x(std::make_move_iterator(x_host.begin()),
@@ -109,21 +111,18 @@ int run(int argc, char** argv) {
     DenseVector y_bench(n);
     double total_ms = 0.0;
     for (int iter = 0; iter < mults; ++iter) {
-        const auto t0 = std::chrono::steady_clock::now();
         A.multiply(x, y_bench);
-        bsmp::cuda::device_synchronize();
-        const auto t1 = std::chrono::steady_clock::now();
-        const double iter_ms =
-            std::chrono::duration<double, std::milli>(t1 - t0).count();
-        total_ms += iter_ms;
-        if (verbose) {
-            std::cout << "Iteration " << (iter + 1) << "/" << mults
-                      << ": " << iter_ms << " ms\n";
-        }
+        //const double iter_ms =
+        //    std::chrono::duration<double, std::milli>(t1 - t0).count();
+        //total_ms += iter_ms;
+        //if (verbose) {
+        //    std::cout << "Iteration " << (iter + 1) << "/" << mults
+        //              << ": " << iter_ms << " ms\n";
+        //}
     }
-    std::cout << "Total time: " << total_ms << " ms for " << mults
-              << " multiplies\n";
-    std::cout << "Average per multiply: " << (total_ms / mults) << " ms\n";
+    //std::cout << "Total time: " << total_ms << " ms for " << mults
+    //          << " multiplies\n";
+    //std::cout << "Average per multiply: " << (total_ms / mults) << " ms\n";
 
     // 6. Correctness: fresh output (operator* zeroes it), download, compare.
     DenseVector y = A * x;

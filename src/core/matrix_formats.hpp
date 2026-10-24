@@ -46,7 +46,8 @@ struct COOFormat {
     static void launch(const MatrixArgs& args,
                        const DenseVector::VectorArgs& vec_args) {
         cuda::spmv_coo({args.row_indices, args.col_indices, args.values,
-                        vec_args.x, vec_args.y, (int)args.nnz, 16, 1024, 1024});
+                        vec_args.x, vec_args.y, (int)args.nnz, core::constants::BLOCK_SIZE, 1024, 1024});
+        cuda::device_synchronize();
     }
 
     static_assert(is_format_contract<COOFormat>(),

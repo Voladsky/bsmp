@@ -102,6 +102,7 @@ __global__ void block_sparse_matvec_transpose_kernel(
 }
 
 void spmv_coo(const SpmvCOOArgs& args) noexcept {
+    cudaMemset(args.y, 0, args.num_rows * sizeof(float));
     int threads = 128;
     threads = (threads / args.block_size) * args.block_size;
     if (threads < args.block_size) threads = args.block_size;

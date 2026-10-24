@@ -18,7 +18,7 @@ struct CPUProfilingContract {
                                                                       start)
                     .count() /
                 1000.0;
-            std::cout << iter_ms << " ms" << std::endl;
+            std::cout << "Iteration: " << iter_ms << " ms" << std::endl;
         }
     };
     Scope makeScope() const {

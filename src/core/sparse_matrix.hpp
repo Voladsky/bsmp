@@ -35,8 +35,6 @@ class SparseMatrix : private prof::InstrHolder<Profiler> {
 
     DenseVector multiply(const DenseVector& x) const {
         DenseVector y(x.size(), alloc_);
-        // The COO kernel accumulates with atomicAdd: zero the output first.
-        cudaMemset(y.data(), 0, y.size() * sizeof(float));
         multiply(x, y);
         return y;
     }

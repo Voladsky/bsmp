@@ -17,7 +17,7 @@ add_subdirectory(src)
 #add_subdirectory(examples)
 
 # New-framework quick start: block-COO SpMV on a random matrix.
-add_executable(framework_spmv_demo examples/framework_spmv_demo.cu)
+add_executable(framework_spmv_demo examples/framework_spmv_demo.cpp)
 target_link_libraries(framework_spmv_demo PRIVATE bsmp)
 bsmp_setup_target(framework_spmv_demo)
 

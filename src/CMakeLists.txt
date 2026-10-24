@@ -19,5 +19,11 @@ else()
   # On most systems linking is automatic, but we keep explicit to be safe when available
 endif()
 
+target_compile_options(bsmp PRIVATE
+    # Release-build optimizations
+    $<$<AND:$<COMPILE_LANGUAGE:CUDA>,$<CONFIG:Release>>:-O3>
+    $<$<AND:$<COMPILE_LANGUAGE:CUDA>,$<CONFIG:Release>>:--use_fast_math>
+)
+
 # Now all targets should be setup with function from Setup.cmake
 bsmp_setup_target(bsmp)
