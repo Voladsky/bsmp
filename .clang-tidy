@@ -1,6 +1,5 @@
 Checks: "cppcoreguidelines-*,
-    bugprone-*
-"
+    bugprone-*"
 WarningsAsErrors: ''
 HeaderFilterRegex: "^${PROJECT_SOURCE_DIR}/.*"
 SystemHeaders: false

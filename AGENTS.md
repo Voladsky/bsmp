@@ -149,20 +149,11 @@ python3 tools/sparse_spy.py data/bsmp1.txt --output bsmp1_sparsity.png
 
 ### Smoke Tests
 
-After building, smoke-test executables are found under `build/`:
+C++ framework integration smoke tests (gtest, `smoke.` CTest prefix; common
+`spmv` namespace):
 
 ```bash
-./build/example_schur_smoke                 # Schur-complement pipeline
-./build/example_rbm_smoke                   # Rigid-body-basis check
-./build/example_regularized_elastic_smoke   # Regularized elasticity operator
-./build/example_sa_amg_scaffold_smoke       # SA-AMG scaffold wiring
-./build/example_sa_amg_aggregation_smoke    # First hierarchy pieces
-./build/example_sa_amg_galerkin_smoke       # Host-reference Galerkin coarse operator
-./build/example_sa_amg_smoothing_smoke      # First smoothed prolongator check
-./build/example_sa_amg_vcycle_smoke         # First two-level SA-AMG V-cycle
-./build/example_sa_amg_chebyshev_smoke      # Chebyshev smoother + V-cycle
-./build/example_mass_orthogonalization_smoke # M-orthogonalization / deflation layer
-./build/example_deflated_pcg_eigensolver_smoke # Deflated PCG eigensolver
+ctest --test-dir build -C Release -R "smoke."
 ```
 
 ## Python CLI Reference
@@ -362,6 +353,26 @@ python/
 - Matrix files follow the convention: `data/<name>.txt` + `data/rhs_<name>.txt`.
 
 ### Testing
+
+C++ framework test suite (gtest/CTest; all tests live in the common `spmv`
+namespace so future framework functionality reuses the same helpers):
+
+- static asserts & unit tests: `tests/unit/*.cpp` (CTest prefix `unit.`)
+- integration smoke tests: `tests/smoke/` (CTest prefix `smoke.`)
+- shared test utilities: `tests/support/spmv_test_utils.hpp`
+- kernel-touching executables compile `tests/support/device_link_stub.cu` to
+  trigger CMake's device-link step (bsmp builds with separable compilation)
+
+```bash
+cmake -S . -B build -G "Visual Studio 18 2026" -A x64 \
+    -DCMAKE_CXX_STANDARD=17 -DCMAKE_CUDA_STANDARD=17 \
+    -DCMAKE_CUDA_ARCHITECTURES=120 \
+    -DBSMP_ENABLE_CLANG_TIDY=OFF -DBSMP_ENABLE_COMPUTE_SANITIZER=OFF
+cmake --build build --config Release --target unit_tests smoke_tests
+ctest --test-dir build -C Release --output-on-failure
+```
+
+Python CLI tests:
 
 ```bash
 cd python

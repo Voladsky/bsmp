@@ -8,6 +8,7 @@ namespace core {
 namespace constants {
 
 constexpr int BLOCK_SIZE = 3;
+
 }  // namespace constants
 }  // namespace core
 }  // namespace bsmp

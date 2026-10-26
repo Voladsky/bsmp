@@ -48,7 +48,7 @@ int run(int argc, char** argv) {
         }
     }
 
-    const int n = 16384;  // element-space matrix size
+    const int n = 1024;  // element-space matrix size
     const int block = bsmp::core::constants::BLOCK_SIZE;
     const double density = 0.007;
     const unsigned int seed = 12345u;
@@ -111,17 +111,12 @@ int run(int argc, char** argv) {
     double total_ms = 0.0;
     for (int iter = 0; iter < mults; ++iter) {
         A.multiply(x, y_bench);
-        //const double iter_ms =
-        //    std::chrono::duration<double, std::milli>(t1 - t0).count();
-        //total_ms += iter_ms;
-        //if (verbose) {
-        //    std::cout << "Iteration " << (iter + 1) << "/" << mults
-        //              << ": " << iter_ms << " ms\n";
-        //}
+        auto metrics = A.lastMetrics();
+        total_ms += metrics.elapsed_time;
     }
-    //std::cout << "Total time: " << total_ms << " ms for " << mults
-    //          << " multiplies\n";
-    //std::cout << "Average per multiply: " << (total_ms / mults) << " ms\n";
+    std::cout << "Total time: " << total_ms << " ms for " << mults
+              << " multiplies\n";
+    std::cout << "Average per multiply: " << (total_ms / mults) << " ms\n";
 
     // 6. Correctness: fresh output (operator* zeroes it), download, compare.
     DenseVector y = A * x;

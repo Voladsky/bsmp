@@ -292,20 +292,19 @@ python3 tools/sparse_spy.py data/martynova/big4/big4_O_phi_Ct.txt --output big4.
 
 ### Smoke Tests
 
-After building, smoke-test executables are found under `build/`:
+The new-framework C++ test suite (gtest/CTest) lives under `tests/` and
+reuses a common `spmv` namespace so future framework functionality can share
+helpers:
+
+- static asserts & unit tests: `tests/unit/*.cpp` (CTest prefix `unit.`)
+- integration smoke tests: `tests/smoke/` (CTest prefix `smoke.`)
+- shared helpers: `tests/support/spmv_test_utils.hpp`
 
 ```bash
-./build/example_schur_smoke                 # Schur-complement pipeline
-./build/example_rbm_smoke                   # Rigid-body-basis check
-./build/example_regularized_elastic_smoke   # Regularized elasticity operator
-./build/example_sa_amg_scaffold_smoke       # SA-AMG scaffold wiring
-./build/example_sa_amg_aggregation_smoke    # First hierarchy pieces
-./build/example_sa_amg_galerkin_smoke       # Host-reference Galerkin coarse operator
-./build/example_sa_amg_smoothing_smoke      # First smoothed prolongator check
-./build/example_sa_amg_vcycle_smoke         # First two-level SA-AMG V-cycle
-./build/example_sa_amg_chebyshev_smoke      # Chebyshev smoother + V-cycle
-./build/example_mass_orthogonalization_smoke # M-orthogonalization / deflation layer
-./build/example_deflated_pcg_eigensolver_smoke # Deflated PCG eigensolver
+cmake --build build --config Release --target unit_tests smoke_tests
+ctest --test-dir build -C Release --output-on-failure
+# run only the smoke tests
+ctest --test-dir build -C Release -R "smoke."
 ```
 
 ## Building Directly

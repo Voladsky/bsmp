@@ -9,6 +9,7 @@
 #include "mem/device_allocator.hpp"
 #include "prof/no_prof.hpp"
 #include "prof/prof_holder.hpp"
+#include "prof/spmv_metrics.hpp"
 
 namespace bsmp {
 
@@ -16,7 +17,8 @@ namespace core {
 
 template <typename MatrixFormat,
           typename Profiler = bsmp::prof::NoProfilingContract>
-class SparseMatrix : private prof::ProfHolder<Profiler> {
+class SparseMatrix : private prof::ProfHolder<Profiler>,
+                     public prof::MetricsAccessor<Profiler> {
     static_assert(formats::is_format_contract<MatrixFormat>(),
                   "MatrixFormat does not satisfy the format contract");
     static_assert(prof::is_profiling_contract<Profiler>(),
@@ -26,10 +28,36 @@ class SparseMatrix : private prof::ProfHolder<Profiler> {
     SparseMatrix(typename MatrixFormat::Data&& data,
                  std::shared_ptr<mem::DeviceAllocator> alloc =
                      mem::default_allocator())
-        : data_(std::move(data)), alloc_(std::move(alloc)) {}
-    SparseMatrix(SparseMatrix&&) = default;
+        : prof::ProfHolder<Profiler>(),
+          // The accessor points at the policy subobject of *this, which is
+          // fully constructed at this point (declaration order).
+          prof::MetricsAccessor<Profiler>(&this->policy()),
+          data_(std::move(data)),
+          alloc_(std::move(alloc)) {}
+
+    // Explicit move: the defaulted one would copy the accessor's raw policy
+    // pointer, leaving it dangling at the moved-from object's address.
+    SparseMatrix(SparseMatrix&& other) noexcept
+        : prof::ProfHolder<Profiler>(std::move(other)),
+          prof::MetricsAccessor<Profiler>(&this->policy()),
+          data_(std::move(other.data_)),
+          alloc_(std::move(other.alloc_)) {}
+
     SparseMatrix(const SparseMatrix&) = delete;
-    SparseMatrix& operator=(SparseMatrix&&) = default;
+    // Not noexcept: DeviceBuffer's move-assignment calls the virtual
+    // deallocate and is not marked noexcept (same as the original = default).
+    SparseMatrix& operator=(SparseMatrix&& other) {
+        if (this != &other) {
+            static_cast<prof::ProfHolder<Profiler>&>(*this) =
+                std::move(other);
+            // The policy subobject address is unchanged (it is a base of
+            // *this); rewire() keeps the accessor coherent.
+            this->rewire(&this->policy());
+            data_ = std::move(other.data_);
+            alloc_ = std::move(other.alloc_);
+        }
+        return *this;
+    }
     SparseMatrix& operator=(const SparseMatrix&) = delete;
     ~SparseMatrix() = default;
 
@@ -43,6 +71,9 @@ class SparseMatrix : private prof::ProfHolder<Profiler> {
     void multiply(const DenseVector& x, DenseVector& y) const { spmv(x, y); }
 
     DenseVector operator*(const DenseVector& x) const { return multiply(x); }
+
+    // lastMetrics() is inherited from MetricsAccessor and therefore only
+    // declared for enabled profilers (no SFINAE on this class's members).
 
    private:
     void spmv(const DenseVector& x, DenseVector& y) const {
