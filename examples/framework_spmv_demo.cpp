@@ -1,6 +1,6 @@
 // Framework quick-start demo: block-COO SpMV on a random matrix.
 //
-// Pipeline: random triplets -> parse_coo (HostCOO) -> to_coo (COOFormat::Buffers)
+// Pipeline: random triplets -> parse_coo (HostCOO) -> to_coo (COOFormat::Data)
 //           -> SparseMatrix<COOFormat>::operator* -> host reference comparison.
 
 #include <algorithm>
@@ -48,9 +48,9 @@ int run(int argc, char** argv) {
         }
     }
 
-    const int n = 1024;  // element-space matrix size
+    const int n = 16384;  // element-space matrix size
     const int block = bsmp::core::constants::BLOCK_SIZE;
-    const double density = 0.02;
+    const double density = 0.007;
     const unsigned int seed = 12345u;
 
     // 1. Random element-level triplets ("i j v" lines for parse_coo).
@@ -99,12 +99,11 @@ int run(int argc, char** argv) {
     }
 
     // 4. Build the device matrix (mem::default_allocator()).
-    COOFormat::Buffers buffers = to_coo(coo);
+    COOFormat::Data buffers = to_coo(coo);
     SparseMatrix<COOFormat, CPUProfilingContract> A(std::move(buffers));
 
-    // x_host is dead after the reference computation: move it onto the device.
-    DenseVector x(std::make_move_iterator(x_host.begin()),
-                  std::make_move_iterator(x_host.end()));
+    // Copy x_host to device
+    DenseVector x(x_host.begin(), x_host.end());
 
     // 5. Benchmark: average per-multiply wall time. y_bench is reused on
     //    purpose (values accumulate) — only timing matters here.
