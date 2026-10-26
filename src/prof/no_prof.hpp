@@ -1,3 +1,6 @@
+#ifndef BSMP_NO_PROF_HPP
+#define BSMP_NO_PROF_HPP
+
 #include "prof_contract.hpp"
 
 namespace bsmp {
@@ -16,3 +19,5 @@ static_assert(is_profiling_contract<NoProfilingContract>(), "NoProfilingContract
 
 }  // namespace prof
 }  // namespace bsmp
+
+#endif // BSMP_NO_PROF_HPP

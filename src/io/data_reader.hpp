@@ -1,3 +1,6 @@
+#ifndef BSMP_DATA_READER_HPP
+#define BSMP_DATA_READER_HPP
+
 #include <filesystem>
 #include "core/matrix_formats.hpp"
 
@@ -9,18 +12,20 @@ class DataReader {
    public:
     virtual ~DataReader() = default;
     template <typename MatrixFormat, typename Profiler>
-    MatrixFormat::Buffers read(const std::filesystem::path& filename);
+    MatrixFormat::Data read(const std::filesystem::path& filename);
 };
 template <typename MatrixFormat, typename Profiler>
-inline MatrixFormat::Buffers DataReader::read(
+inline MatrixFormat::Data DataReader::read(
     const std::filesystem::path& filename) {
-    return MatrixFormat::Buffers();
+    return MatrixFormat::Data();
 }
 
 template <typename Profiler>
-inline core::formats::COOFormat::Buffers DataReader::read(
+inline core::formats::COOFormat::Data DataReader::read(
     const std::filesystem::path& filename) {
 }
 
 }  // namespace io
 }  // namespace bsmp
+
+#endif // BSMP_DATA_READER_HPP

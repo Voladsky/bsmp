@@ -2,6 +2,7 @@
 #define BSMP_DEVICE_BUFFER_HPP
 
 #include <memory>
+#include <cuda_runtime.h>
 
 #include "device_allocator.hpp"
 
@@ -18,6 +19,7 @@ class DeviceBuffer {
     DeviceBuffer(DeviceBuffer&& other) noexcept : d_ptr_(other.d_ptr_), n_(other.n_), alloc_(other.alloc_) {
         other.d_ptr_ = nullptr;
     }
+    DeviceBuffer() : n_(0), alloc_(default_allocator()) {}
     DeviceBuffer(const DeviceBuffer&) = delete;
     DeviceBuffer& operator=(DeviceBuffer&& other) noexcept {
         if (this == &other) return *this;
@@ -43,6 +45,12 @@ class DeviceBuffer {
     [[nodiscard]] T* data() noexcept { return d_ptr_; };
     [[nodiscard]] const T* data() const noexcept { return d_ptr_; }
     [[nodiscard]] size_t size() const noexcept { return n_; }
+
+    void assign(size_t n, T value) {
+        alloc_->deallocate(d_ptr_);
+        alloc_->allocate(n);
+        cudaMemset(d_ptr_, value, n * sizeof(T));
+    }
 
    private:
     T* d_ptr_;

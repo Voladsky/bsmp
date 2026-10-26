@@ -7,6 +7,7 @@
 
 #include "cuda/spmv.cuh"
 #include "dense_vector.hpp"
+#include "constants.hpp"
 
 namespace bsmp {
 
@@ -19,34 +20,31 @@ struct is_format_contract : std::false_type {};
 
 template <class T>
 struct is_format_contract<
-    T, std::void_t<typename T::Buffers, typename T::KernelArgs,
-                   decltype(&T::launch)>>
-    : std::is_same<decltype(&T::launch),
-                   void (*)(const typename T::MatrixArgs&,
-                            const DenseVector::VectorArgs&)> {};
+    T,
+    std::void_t<typename T::Data, typename T::KernelArgs, decltype(&T::spmv)>>
+    : std::is_same<decltype(&T::spmv),
+                   void (*)(const typename T::Data&, const DenseVector&,
+                            DenseVector&)> {};
 
 // ----------------------------------------------------------------------------
 
 struct COOFormat {
-    using Buffers = std::tuple<mem::DeviceBuffer<int>, mem::DeviceBuffer<int>,
-                               mem::DeviceBuffer<float>>;
+    struct Data {
+        mem::DeviceBuffer<int> block_rows;
+        mem::DeviceBuffer<int> block_cols;
+        mem::DeviceBuffer<float> block_data;
+        int nnz;
+        int num_rows;
+        int num_cols;
+    };
     using KernelArgs = cuda::SpmvCOOArgs;
-    struct MatrixArgs {
-        const int* row_indices;
-        const int* col_indices;
-        const float* values;
-        size_t nnz;
-    };
-    static inline MatrixArgs pack(const Buffers& buffers) {
-        return MatrixArgs{
-            std::get<0>(buffers).data(), std::get<1>(buffers).data(),
-            std::get<2>(buffers).data(), std::get<0>(buffers).size()};
-    };
 
-    static void launch(const MatrixArgs& args,
-                       const DenseVector::VectorArgs& vec_args) {
-        cuda::spmv_coo({args.row_indices, args.col_indices, args.values,
-                        vec_args.x, vec_args.y, (int)args.nnz, core::constants::BLOCK_SIZE, 1024, 1024});
+    static void spmv(const Data& matrix, const DenseVector& x, DenseVector& y) {
+        cuda::spmv_coo({matrix.block_rows.data(), matrix.block_cols.data(),
+                        matrix.block_data.data(), x.data(), y.data(),
+                        matrix.nnz, bsmp::core::constants::BLOCK_SIZE,
+                        matrix.num_rows,
+                        matrix.num_cols});
         cuda::device_synchronize();
     }
 

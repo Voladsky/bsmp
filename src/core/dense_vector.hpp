@@ -17,9 +17,6 @@ class DenseVector {
    public:
     DenseVector(size_t n,
                 std::shared_ptr<mem::DeviceAllocator> alloc = mem::default_allocator());
-    // Constructs from a contiguous host range [first, last) and uploads it to
-    // device memory. Pass std::make_move_iterator(...) to move elements out of
-    // the source instead of copying them.
     template <typename InputIt>
     DenseVector(InputIt first, InputIt last,
                 std::shared_ptr<mem::DeviceAllocator> alloc = mem::default_allocator())

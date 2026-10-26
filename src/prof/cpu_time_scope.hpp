@@ -1,3 +1,6 @@
+#ifndef BSMP_CPU_TIME_SCOPE_H
+#define BSMP_CPU_TIME_SCOPE_H
+
 #include <chrono>
 #include <iostream>
 
@@ -8,7 +11,7 @@ namespace bsmp {
 namespace prof {
 
 struct CPUProfilingContract {
-    constexpr static bool enabled = true;
+    static constexpr bool enabled = true;
     struct Scope {
         std::chrono::steady_clock::time_point start;
         void stop() noexcept {
@@ -33,3 +36,5 @@ static_assert(is_profiling_contract<CPUProfilingContract>(),
 
 }  // namespace prof
 }  // namespace bsmp
+
+#endif // BSMP_CPU_TIME_SCOPE_H

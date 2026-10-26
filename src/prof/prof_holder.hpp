@@ -8,16 +8,18 @@ namespace bsmp {
 namespace prof {
 
 template <class P, bool = std::is_empty_v<P> && !std::is_final_v<P>>
-struct InstrHolder;
+struct ProfHolder;
 
 template <class P>
-struct InstrHolder<P, true> : private P {
+struct ProfHolder<P, true> : private P {
+    static constexpr bool enabled = P::enabled;
     P& policy() noexcept { return *this; }
     const P& policy() const noexcept { return *this; }
 };
 
 template <class P>
-struct InstrHolder<P, false> {
+struct ProfHolder<P, false> {
+    static constexpr bool enabled = P::enabled;
     P& policy() noexcept { return policy_; }
     const P& policy() const noexcept { return policy_; }
 

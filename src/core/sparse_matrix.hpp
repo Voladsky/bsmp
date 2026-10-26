@@ -16,17 +16,17 @@ namespace core {
 
 template <typename MatrixFormat,
           typename Profiler = bsmp::prof::NoProfilingContract>
-class SparseMatrix : private prof::InstrHolder<Profiler> {
+class SparseMatrix : private prof::ProfHolder<Profiler> {
     static_assert(formats::is_format_contract<MatrixFormat>(),
                   "MatrixFormat does not satisfy the format contract");
     static_assert(prof::is_profiling_contract<Profiler>(),
                   "Profiler does not satisfy the profiling contract");
 
    public:
-    SparseMatrix(typename MatrixFormat::Buffers&& buffers,
+    SparseMatrix(typename MatrixFormat::Data&& data,
                  std::shared_ptr<mem::DeviceAllocator> alloc =
                      mem::default_allocator())
-        : buffers_(std::move(buffers)), alloc_(std::move(alloc)) {}
+        : data_(std::move(data)), alloc_(std::move(alloc)) {}
     SparseMatrix(SparseMatrix&&) = default;
     SparseMatrix(const SparseMatrix&) = delete;
     SparseMatrix& operator=(SparseMatrix&&) = default;
@@ -40,23 +40,20 @@ class SparseMatrix : private prof::InstrHolder<Profiler> {
     }
 
     // Pre-zeroed y required (the kernel accumulates with atomicAdd).
-    void multiply(const DenseVector& x, DenseVector& y) const { launch(x, y); }
+    void multiply(const DenseVector& x, DenseVector& y) const { spmv(x, y); }
 
     DenseVector operator*(const DenseVector& x) const { return multiply(x); }
 
    private:
-    void launch(const DenseVector& x, DenseVector& y) const {
+    void spmv(const DenseVector& x, DenseVector& y) const {
         [[maybe_unused]] auto scope = this->policy().makeScope();
-        auto matrix_args = MatrixFormat::pack(this->buffers_);
-        auto vector_args = DenseVector::pack(x, y);
-        MatrixFormat::launch(matrix_args, vector_args);
-        if constexpr (profiler_.enabled) {
+        MatrixFormat::spmv(data_, x, y);
+        if constexpr (this->enabled) {
             scope.stop();
         }
     }
 
-    Profiler profiler_;
-    typename MatrixFormat::Buffers buffers_;
+    typename MatrixFormat::Data data_;
     std::shared_ptr<mem::DeviceAllocator> alloc_;
 };
 

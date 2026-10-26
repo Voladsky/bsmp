@@ -1,9 +1,10 @@
 #ifndef BSMP_PARSERS_UTILITIES_HPP
 #define BSMP_PARSERS_UTILITIES_HPP
 
+#include <cuda_runtime.h>
+
 #include <algorithm>
 #include <cstddef>
-#include <cuda_runtime.h>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -25,9 +26,10 @@ namespace io {
 namespace parser_utilities {
 
 struct HostCOO {
-    int num_rows;                 // matrix rows (max_i + 1)
-    int num_cols;                 // matrix cols (max_j + 1)
-    int block_size;               // block edge length
+    int num_rows;    // matrix rows (max_i + 1)
+    int num_cols;    // matrix cols (max_j + 1)
+    int block_size;  // block edge length
+    // nnz is block_rows size;
     std::vector<int> block_rows;  // block-level row index  (i / block_size)
     std::vector<int> block_cols;  // block-level col index  (j / block_size)
     std::vector<float>
@@ -124,8 +126,8 @@ inline HostCOO parse_coo(std::istream& is) {
     return result;
 }
 
-/// Upload a parsed HostCOO to device memory as COOFormat::Buffers.
-inline bsmp::core::formats::COOFormat::Buffers to_coo(
+/// Upload a parsed HostCOO to device memory as COOFormat::Data.
+inline bsmp::core::formats::COOFormat::Data to_coo(
     const HostCOO& coo,
     std::shared_ptr<mem::DeviceAllocator> alloc = mem::default_allocator()) {
     using COOFormat = bsmp::core::formats::COOFormat;
@@ -133,33 +135,35 @@ inline bsmp::core::formats::COOFormat::Buffers to_coo(
     const size_t num_blocks = coo.block_rows.size();
     const size_t block_size = static_cast<size_t>(coo.block_size);
 
-    COOFormat::Buffers buffers{
+    COOFormat::Data device_data{
         mem::DeviceBuffer<int>(num_blocks, alloc),
         mem::DeviceBuffer<int>(num_blocks, alloc),
-        mem::DeviceBuffer<float>(num_blocks * block_size * block_size, alloc)};
+        mem::DeviceBuffer<float>(num_blocks * block_size * block_size, alloc),
+        (int)num_blocks,
+        coo.num_rows,
+        coo.num_cols};
 
     if (num_blocks == 0) {
-        return buffers;
+        return device_data;
     }
-
     cudaError_t err =
-        cudaMemcpy(std::get<0>(buffers).data(), coo.block_rows.data(),
+        cudaMemcpy(device_data.block_rows.data(), coo.block_rows.data(),
                    num_blocks * sizeof(int), cudaMemcpyHostToDevice);
     if (err != cudaSuccess) {
         throw std::runtime_error(cudaGetErrorString(err));
     }
-    err = cudaMemcpy(std::get<1>(buffers).data(), coo.block_cols.data(),
+    err = cudaMemcpy(device_data.block_cols.data(), coo.block_cols.data(),
                      num_blocks * sizeof(int), cudaMemcpyHostToDevice);
     if (err != cudaSuccess) {
         throw std::runtime_error(cudaGetErrorString(err));
     }
-    err = cudaMemcpy(std::get<2>(buffers).data(), coo.block_data.data(),
+    err = cudaMemcpy(device_data.block_data.data(), coo.block_data.data(),
                      coo.block_data.size() * sizeof(float),
                      cudaMemcpyHostToDevice);
     if (err != cudaSuccess) {
         throw std::runtime_error(cudaGetErrorString(err));
     }
-    return buffers;
+    return device_data;
 }
 
 }  // namespace parser_utilities
